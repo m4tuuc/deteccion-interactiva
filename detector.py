@@ -1,10 +1,10 @@
 import cv2
 from ultralytics import YOLO
 import numpy as np
+import torch
 
-
-IMAGE_PATH = 'mi_imagen.jpg'
-MODEL_NAME = YOLO("yolov8n.pt")    
+IMAGE_PATH = 'img.jpg'
+MODEL_NAME = YOLO('D:/runs/detect/train2/weights/best.pt')
 CONFIDENCE_THRESHOLD = 0.5    
 
 
@@ -211,8 +211,9 @@ while True:
         hr = y2r - y1r
         info_lines_roi = [
             "ROI Manual",
-            f"Coord: ({x1r},{y1r})-({x2r},{y2r})",
-            f"Tamaño: {wr}x{hr} px"
+            f"Nombre: {hovered_detection_info.get('Nombre', 'N/A')}",
+            f"Tipo: {hovered_detection_info.get('Tipo', 'N/A')}",
+            f"Confianza: {hovered_detection_info.get('Confianza', 'N/A')}"
         ]
         display_frame = draw_tooltip(display_frame, info_lines_roi, current_mouse_pos)
         tooltip_drawn = True
