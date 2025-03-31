@@ -4,7 +4,7 @@ import numpy as np
 import torch
 
 IMAGE_PATH = 'img.jpg'
-MODEL_NAME = YOLO('D:/runs/detect/train2/weights/best.pt')
+MODEL_NAME = YOLO('./best.pt')
 CONFIDENCE_THRESHOLD = 0.5    
 
 

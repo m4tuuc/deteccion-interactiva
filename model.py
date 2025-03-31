@@ -1,14 +1,14 @@
 from ultralytics import YOLO
 
 # Load a model
-model = YOLO("yolov8x.pt")
+model = YOLO("yolov8n-seg.pt")
 
 train_results = model.train(
     lr0 = 1,
     momentum = 0.7,
-    data="coco8.yaml",
+    data="coco8-seg.yaml",
     batch=16,
-    epochs=100,  
+    epochs=30,  
     imgsz=640, 
     device="cuda",
     workers = 0,  
