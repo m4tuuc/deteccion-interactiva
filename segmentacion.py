@@ -4,9 +4,11 @@ import numpy as np
 import torch
 import random
 
-IMAGE_PATH = 'img.jpg'
-MODEL_NAME = YOLO('./best.pt') #Modelo segmentacion
-CONFIDENCE_THRESHOLD = 0.4
+#Cargamos la imagen que queremos segmentar 
+IMAGE_PATH = 'mi_imagen.jpg'
+#Modelo segmentacion
+MODEL_NAME = YOLO('./best.pt')
+CONFIDENCE_THRESHOLD = 0.4 #Podemos jugar con esto para encontrar si es que el modelo le cuesta encontrar y reconocer el objeto. 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 selecting_roi = False
@@ -35,6 +37,15 @@ if frame is None:
 original_frame = frame.copy()
 
 #Funcion callback raton y ROI
+'''
+Definimos nuestra funcion encargarda de fomar el ROI basandos en las coordenadas del mouse, tomamos el punto inicial y el final
+se las calcula y validamos si es el ancho y alto son mayores a X cantidad de pixeles .
+
+Vamos a buscar nuestra region de interes dentro de la imagen y la vamos a encerrar en un recuadro.
+
+Si la ROI estan en las coordenadas correctas va a retornar la segmentacion del objeto del area que elegimos como nuestro ROI.
+
+'''
 def mouse_callback(event, x, y, flags, param):
     global selecting_roi, roi_start_point, roi_end_point, final_selected_roi
     global segmentation_results_in_roi, roi_origin
@@ -49,6 +60,7 @@ def mouse_callback(event, x, y, flags, param):
         segmentation_results_in_roi = None
         roi_origin = None
 
+    #Actualiza el rectangulo mientras se arrastra
     elif event == cv2.EVENT_MOUSEMOVE:
         if selecting_roi:
             roi_end_point = (x, y)
@@ -64,13 +76,13 @@ def mouse_callback(event, x, y, flags, param):
             if x2 - x1 > 10 and y2 - y1 > 10:
                 final_selected_roi = (x1, y1, x2, y2)
                 roi_origin = (x1, y1)
-                print(f"ROI Seleccionado: {final_selected_roi}. Segmentando...")
+                print(f"ROI: {final_selected_roi}. Segmentando...") 
 
                 try:
                     roi_img = original_frame[y1:y2, x1:x2]
 
                     if roi_img.size == 0:
-                        print("Error: ROI recortada está vacía.")
+                        print("Error: ROI vacia.")
                         final_selected_roi = None
                         roi_origin = None
                         return
@@ -86,9 +98,9 @@ def mouse_callback(event, x, y, flags, param):
 
                     if results and results[0].masks is not None:
                          segmentation_results_in_roi = results[0]
-                         print(f"Segmentación completada. {len(segmentation_results_in_roi.masks)} máscaras en ROI.")
+                         print(f"Segmentación completada. {len(segmentation_results_in_roi.masks)} mascaras en ROI.")
                     else:
-                         print("No se encontraron máscaras en la ROI.")
+                         print("No se encontraron mascaras en la ROI.")
                          segmentation_results_in_roi = None
 
                 except Exception as e:
@@ -107,8 +119,13 @@ def get_mask_color(class_id):
         mask_colors[class_id] = (random.randint(100, 255), random.randint(100, 255), random.randint(50, 255))
     return mask_colors[class_id]
 
+
+#VENTANA
 window_name = 'Segmentador YOLOv8 Interactivo (Q para salir)'
-cv2.namedWindow(window_name)
+cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+initial_width = 800
+initial_height = 640
+cv2.resizeWindow(window_name, initial_width, initial_height)
 cv2.setMouseCallback(window_name, mouse_callback)
 
 #Main
@@ -161,7 +178,7 @@ while True:
                      print(f"Advertencia: Discrepancia tamaño al dibujar máscara {i}. Slice: {overlay_roi_slice.shape}, Máscara: {(h_roi, w_roi)}")
 
             except IndexError as e:
-                 print(f"Error de índice al dibujar máscara: {e}. roi_origin={roi_origin}, h_roi={h_roi}, w_roi={w_roi}, overlay_shape={overlay.shape}")
+                 print(f"Error de indice al dibujar mascara: {e}. roi_origin={roi_origin}, h_roi={h_roi}, w_roi={w_roi}, overlay_shape={overlay.shape}")
 
         cv2.addWeighted(overlay, 0.6, display_frame, 0.4, 0, display_frame)
 
@@ -176,4 +193,4 @@ while True:
         break
 
 cv2.destroyAllWindows()
-print("Ventana cerrada. Programa finalizado.")
+print("Programa finalizado.")

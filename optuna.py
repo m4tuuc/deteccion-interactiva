@@ -8,7 +8,7 @@ def objective(trial):
 
     learning_rate = trial.suggest_loguniform('lr0', 1e-5, 1e-1)  # Rango logarítmico
     batch_size = trial.suggest_int('batch', 16, 64)                   # Rango entero
-    epochs = trial.suggest_int('epochs', 10, 50)                           # Rango entero
+    epochs = trial.suggest_int('epochs', 50, 100)                           # Rango entero
     
 
     mAP = train_results(learning_rate=learning_rate, batch_size=batch_size, epochs=epochs)
