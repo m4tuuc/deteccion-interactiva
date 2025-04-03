@@ -158,11 +158,15 @@ while True:
             #     cv2.imshow(f"Mascara {i} sobre ROI Recortada", roi_img_debug)
             #     cv2.waitKey(1)
             # except Exception as e_dbg:
-            #     print(f"Error en debug de máscara raw: {e_dbg}")
+            #     print(f"Error en debug de mascara raw: {e_dbg}")
             # 
-
+         
             mask_resized = cv2.resize(mask_np, (w_roi, h_roi), interpolation=cv2.INTER_NEAREST)
-            mask_binary = (mask_resized > 0.5).astype(np.uint8)
+            #Aplica desenfoque Gaussiano a la mascara de probabilidad
+            ksize = (5, 5) # Debe ser impar
+            sigmaX = 1.5    # Experimentar con este valor 
+            blurred_prob_mask = cv2.GaussianBlur(mask_resized, ksize, sigmaX)
+            mask_binary = (blurred_prob_mask > 0.5).astype(np.uint8)
 
             if np.sum(mask_binary) == 0:
                 continue
