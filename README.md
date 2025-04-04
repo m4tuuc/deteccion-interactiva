@@ -22,8 +22,8 @@ aplica primero un desenfoque Gaussiano a la mascara de probabilidad con valores 
 
 | Paquete                 | Versión          | 
 | :---------------------- | :--------------- |
-| `opencv-contrib-python` | `==4.11.0.86`    |
-| `ultralytics`           | `==8.1.0`        |
+| `opencv-contrib-python` | `4.11.0.86`    |
+| `ultralytics`           | `8.1.0`        |
 | `numpy`                 | (Última estable) |
 | `optuna`                | (Última estable) |
 
@@ -76,12 +76,12 @@ PyTorch: [https://pytorch.org/get-started/locally/](https://pytorch.org/get-star
     *   **Imagen de Entrada:** Coloca la imagen que deseas segmentar en el directorio del proyecto (o en una subcarpeta) y asegúrate de que la variable `IMAGE_PATH` dentro del script `segmentacion.py` apunte a ella correctamente.
         ```python
         # Dentro de segmentacion.py
-        IMAGE_PATH = 'img.jpg' # <-- Cambia esto si tu imagen se llama diferente o está en otro lugar
+        IMAGE_PATH = 'img.jpg' # <-- Cambia esto a tu imagen
         ```
     *   **Modelo YOLOv11:** Coloca tu archivo de modelo entrenado (`.pt`, por ejemplo `best.pt` que generamos con Optuna) en el directorio del proyecto y asegurate de que la variable `MODEL_NAME` apunte a el.
         ```python
         # Dentro de segmentacion.py
-        MODEL_NAME = YOLO('./best.pt') # <-- Asegurate que el path sea correcto
+        MODEL_NAME = YOLO('./best.pt')
         ```
 
 ### ▶️ Ejecutar el Programa
